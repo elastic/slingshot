@@ -1,4 +1,4 @@
-![elastic slingshots](./four-elastic-slingshots.png)
+![elastic slingshots](./four-elastic-slingshots-small.png)
 
 # slingshot
 
