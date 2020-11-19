@@ -1,4 +1,12 @@
 {
+  "name": "slingshot",
+  "version": "0.10.0",
+  "description": "Elastic data generator and loader",
+  "author": "Jason Rhodes <jason.matthew.rhodes@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "slingshot": "./bin/slingshot.js"
+  },
   "dependencies": {
     "@elastic/elasticsearch": "^7.9.0",
     "dot-object": "^2.1.4",
