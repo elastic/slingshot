@@ -1,18 +1,35 @@
 #######################################
-# required
+# REQUIRED SETTINGS
 #######################################
 elasticsearch:
   node: "YOUR ES HOST AND PORT"
   auth:
     username: "username"
     password: "password"
+#
+#
+#
 #######################################
-# optional overrides
+# OPTIONAL OVERRIDES
 #######################################
+
+# dry_run: false
+
+# Logging config
+##############################################################################
+# logging:
+#   level: info
+#   silent: false
+#
+# Cycles represent an individual point in time that documents are uploaded.
+##############################################################################
 # cycles:
 #   continuous: false
 #   n: false
 #   ms_pause_after_each: 30000
+#
+# Pods
+##############################################################################
 # n_pod_hosts: 3
 # n_pods: 30
 # pod_metrics:

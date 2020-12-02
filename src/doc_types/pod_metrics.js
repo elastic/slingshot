@@ -1,5 +1,11 @@
 const random = require("random");
 const FAKE_IDENTIFIER = "l|b|s";
+const {
+  randomInt,
+  guardValue,
+  chooseRandomItem,
+} = require("../lib/value_helpers");
+
 const IPS = [
   "10.136.197.75",
   "10.136.62.43",
@@ -15,28 +21,10 @@ const IPS = [
   "10.244.2.124",
 ]; // TODO: randomize somehow? within a range?
 
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function guardValue(value, { min = 0, max = 1 }) {
-  if (min > max) {
-    throw new Error(`Invalid guard min: ${min} and max: ${max}`);
-  }
-  return Math.max(Math.min(value, max), min);
-}
-
-function chooseRandomItem(list) {
-  const random_index = randomInt(0, list.length - 1);
-  return list[random_index];
-}
-
-module.exports = function load_pods({
-  n_pod_hosts = 3,
-  n_pods = 30,
-  cloud = false,
-  pod_metrics = {},
-}) {
+module.exports = function load_pods(
+  { n_pod_hosts = 3, n_pods = 30, cloud = false, pod_metrics = {} },
+  { logger }
+) {
   // set some things up in scope for use of this builder
   const {
     memory = { mean: 0.8, stdev: 0.05 },
@@ -76,7 +64,7 @@ module.exports = function load_pods({
         cloud_provider: cloud ? "aws" : "", // TODO: need to randomize this
         cloud_instance_id: cloud ? 10000 * host_num : "",
         cloud_region: cloud ? "us-east-1" : "", // TODO: need to randomize this
-        event_duration: randomInt(80000000, 85000000), // is this the right range? does it matter?
+        event_duration: randomInt(80000000, 85000000), // TODO: is this the right range? does it matter?
         k8s_namespace: chooseRandomItem([
           "kube-system",
           "default",
