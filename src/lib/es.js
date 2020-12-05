@@ -9,7 +9,7 @@ class Client {
 
   async batchIndex(documents, { index, ...options }) {
     const body = flatMap(documents, (doc) => [
-      { index: { _index: index } },
+      { create: { _index: index } },
       doc,
     ]);
     return await this.es.bulk({
