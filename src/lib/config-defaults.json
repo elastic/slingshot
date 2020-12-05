@@ -1,12 +1,12 @@
 {
-  "indices.metrics": "metrics-slingshot",
   "cycles.continuous": false,
   "cycles.n": false,
   "cycles.ms_pause_after_each": 30000,
-  "n_pod_hosts": 3,
-  "n_pods": 30,
-  "pod_metrics.cpu.mean": 0.4,
-  "pod_metrics.cpu.stdev": 0.2,
-  "pod_metrics.memory.mean": 0.5,
-  "pod_metrics.memory.stdev": 0.1
+  "types.pod.indices.metrics": "metrics-kubernetes.pod-slingshot",
+  "types.pod.n_hosts": 3,
+  "types.pod.n_pods": 30,
+  "types.pod.metrics.cpu.mean": 0.4,
+  "types.pod.metrics.cpu.stdev": 0.2,
+  "types.pod.metrics.memory.mean": 0.5,
+  "types.pod.metrics.memory.stdev": 0.1
 }
