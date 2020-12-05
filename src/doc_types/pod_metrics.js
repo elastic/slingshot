@@ -1,5 +1,5 @@
 const random = require("random");
-const FAKE_IDENTIFIER = "l|b|s";
+const FAKE_IDENTIFIER = "_SS";
 const {
   randomInt,
   guardValue,
@@ -21,32 +21,38 @@ const IPS = [
   "10.244.2.124",
 ]; // TODO: randomize somehow? within a range?
 
-module.exports = function load_pods(
-  { n_pod_hosts = 3, n_pods = 30, cloud = false, pod_metrics = {} },
-  { logger }
-) {
-  // set some things up in scope for use of this builder
+module.exports = function load_pods(options, { logger }) {
+  const {
+    n_hosts = 3, // how many hosts the pods will be spread across
+    n_pods = 30, // how many pods will be created each cycle
+    cloud = false, // whether these pods should be in the cloud (TODO: fix this)
+    host_id_offset = 0, // use if you want to create different hosts than another run
+    pod_id_offset = 0, // use if you want to create different pods than another run
+    metrics = {},
+  } = options;
   const {
     memory = { mean: 0.8, stdev: 0.05 },
     cpu = { mean: 0.4, stdev: 0.1 },
-  } = pod_metrics;
+  } = metrics;
+
+  // set some things up in scope for use of this builder
   const rand_memory = random.normal(memory.mean, memory.stdev);
   const rand_cpu = random.normal(cpu.mean, cpu.stdev);
-  const n_pods_per_host = Math.floor(n_pods / n_pod_hosts);
 
   return {
-    n_docs: n_pods_per_host * n_pod_hosts,
-    get_values: (i) => {
+    // n_docs_per_cycle tells the loader how many documents represent one "cycle"
+    n_docs_per_cycle: n_pods,
+    create_cycle_values: (i) => {
       // host number should increment 1 for each i value, then loop
       // pod number should be the same for each rotation through all host numbers
-      // e.g. where n_pod_hosts = 2:
+      // e.g. where n_hosts = 2:
       // i = 0 -> h1-p1
       // i = 1 -> h2-p1
       // i = 2 -> h3-p1
       // i = 3 -> h1-p2
       // etc
-      const host_num = (i % n_pod_hosts) + 1;
-      const pod_num = Math.floor(i / n_pod_hosts) + 1;
+      const host_num = (i % n_hosts) + 1 + host_id_offset;
+      const pod_num = Math.floor(i / n_hosts) + 1 + pod_id_offset;
       const host = `h${host_num}`;
       const pod = `p${pod_num}`;
       const pod_id = `${host}:${pod}`;
