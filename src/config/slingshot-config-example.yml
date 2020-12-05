@@ -1,6 +1,6 @@
-#######################################
+##############################################################################
 # REQUIRED SETTINGS
-#######################################
+##############################################################################
 elasticsearch:
   node: "YOUR ES HOST AND PORT"
   auth:
@@ -9,9 +9,9 @@ elasticsearch:
 #
 #
 #
-#######################################
+##############################################################################
 # OPTIONAL OVERRIDES
-#######################################
+##############################################################################
 
 # dry_run: false
 
@@ -21,21 +21,30 @@ elasticsearch:
 #   level: info
 #   silent: false
 #
-# Cycles represent an individual point in time that documents are uploaded.
+# Cycles config
 ##############################################################################
+# A cycle represents an individual point in time that documents are uploaded.
+# By default, the script runs once, for one cycle.
+# "continuous" means the script will continue to run until stopped
+# "n" means it will run n times and then stop
+# "ms_pause_after_each" is how long to wait between runs for n or continuous modes
+#
 # cycles:
 #   continuous: false
 #   n: false
 #   ms_pause_after_each: 30000
 #
-# Pods
+# Document type config
 ##############################################################################
-# n_pod_hosts: 3
-# n_pods: 30
-# pod_metrics:
-#   cpu:
-#     mean: 0.4
-#     stdev: 0.2
-#   memory:
-#     mean: 0.5
-#     stdev: 0.1
+
+# types:
+#   pod:
+#     n_hosts: 3
+#     n_pods: 30
+#     metrics:
+#       cpu:
+#         mean: 0.4
+#         stdev: 0.2
+#       memory:
+#         mean: 0.5
+#         stdev: 0.1

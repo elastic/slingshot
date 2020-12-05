@@ -4,6 +4,7 @@ const yaml = require("yaml");
 const merge = require("lodash.merge");
 const default_config = require("./config-defaults");
 
+// converts dot notation object into fully nested object
 dot.object(default_config);
 
 module.exports = function get_config({
