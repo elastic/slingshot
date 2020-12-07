@@ -21,7 +21,7 @@ const IPS = [
   "10.244.2.124",
 ]; // TODO: randomize somehow? within a range?
 
-module.exports = function load_pods(options, { logger }) {
+module.exports = function load_pods(options, now, { logger }) {
   const {
     n_hosts = 3, // how many hosts the pods will be spread across
     n_pods = 30, // how many pods will be created each cycle
@@ -61,7 +61,7 @@ module.exports = function load_pods(options, { logger }) {
       const cpu_pct = rand_cpu();
 
       return {
-        date: new Date().toISOString(),
+        date: new Date(now).toISOString(),
         host_num,
         pod_num,
         host,
