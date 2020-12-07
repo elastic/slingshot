@@ -57,6 +57,4 @@ const options = get_config(
   )
 );
 
-console.log(JSON.stringify(options, null, 2));
-
-// load(init_pod_metrics, options);
+load(init_pod_metrics, options);
