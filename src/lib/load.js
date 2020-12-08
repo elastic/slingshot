@@ -2,7 +2,6 @@ const { Client } = require("./es");
 const get_logger = require("./logger");
 const dot = require("dot-object");
 const Mustache = require("mustache");
-const { option, options } = require("yargs");
 
 module.exports = async function load(initialize, options) {
   const type_options = options.types[options.doc_type];
@@ -90,7 +89,7 @@ module.exports = async function load(initialize, options) {
     } catch (err) {
       logger.error(
         `${CYCLE_NAME} Error(s) while loading documents (turn on verbose logging to see full error result): ${err.message}`
-      );``
+      );
       if (err.es_errors) {
         logger.verbose(JSON.stringify(err.es_errors, null, 2));
       }
@@ -141,8 +140,8 @@ module.exports = async function load(initialize, options) {
       }
     } catch (err) {
       logger.error(
-        `${CYCLE_NAME} Error(s) while loading documents (turn on verbose logging to see full error result): ${err.message}`
-      );``
+        ` Error(s) while loading documents (turn on verbose logging to see full error result): ${err.message}`
+      );
       if (err.es_errors) {
         logger.verbose(JSON.stringify(err.es_errors, null, 2));
       }

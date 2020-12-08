@@ -8,6 +8,8 @@ const merge = require('lodash.merge');
 
 dot.object(argv);
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 /**
  * These examples do NOT use the yml config files, but define
  * config here in JS instead. You can pass in command line flags
@@ -22,7 +24,7 @@ const options = get_config(
     {},
     {
       elasticsearch: {
-        node: 'http://localhost:9200',
+        node: 'https://localhost:9200',
         auth: {
           username: 'elastic',
           password: 'changeme',
@@ -37,11 +39,11 @@ const options = get_config(
         continuous: true,
         ms_pause_after_each: 15000,
       },
-      history: {
-        from: now - 7 * 24 * 60 * 60 * 1000,
-        to: now,
-        interval: 60000,
-      },
+      // history: {
+      //   from: now - 7 * 24 * 60 * 60 * 1000,
+      //   to: now,
+      //   interval: 60000,
+      // },
       types: {
         pod: {
           n_hosts: 3,
