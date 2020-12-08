@@ -43,6 +43,8 @@ module.exports = async function load(initialize, options) {
           acc[path] =
             typeof template[path] === "string"
               ? Mustache.render(template[path], values)
+              : typeof template[path] === "function"
+              ? template[path](values)
               : template[path];
           return acc;
         }, {});
