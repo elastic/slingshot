@@ -1,6 +1,6 @@
 {
   "name": "slingshot",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Elastic data generator and loader",
   "author": "Jason Rhodes <jason.matthew.rhodes@gmail.com>",
   "license": "MIT",
