@@ -33,8 +33,9 @@ const options = get_config(
       },
       dry_run: false,
       cycles: {
-        continuous: true,
-        ms_pause_after_each: 15000,
+        continuous: true, // script will run continuously, like n = Infinity
+        ms_pause_after_each: 15000, // script will wait this long after each cycle (each batch of docs is a cycle)
+        // n: 3 // script will run this number of times, and then stop
       },
       types: {
         pod: {
