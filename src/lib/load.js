@@ -8,23 +8,27 @@ module.exports = async function load(initialize, options) {
   const client = new Client(options.elasticsearch);
   const logger = get_logger(options);
 
-  if (!type_options || !type_options.indices) {
-    logger.error(`Invalid doc_type: ${options.doc_type}`);
-    process.exit();
-  }
-
-  const METRICS_INDEX = type_options.indices.metrics;
+  // if (!type_options || !type_options.index) {
+  //   logger.error(
+  //     `Invalid doc_type: ${options.doc_type}, missing options (${doc_type}.index is required)`
+  //   );
+  //   process.exit();
+  // }
 
   logger.info("Starting slingshot data loading process");
   logger.verbose("Slingshot verbose logging is turned on");
-  logger.error("This is an example of a slingshot error log");
 
-  function generate_cycle_docs(n_docs_per_cycle, create_cycle_values, template) {
+  function generate_cycle_docs(
+    n_docs_per_cycle,
+    create_cycle_values,
+    template,
+    now
+  ) {
     const docs = [];
     for (let i = 0; i < n_docs_per_cycle; i++) {
       const keys = Object.keys(template);
-      const values = create_cycle_values(i);
-  
+      const values = create_cycle_values(i, now);
+
       let doc = keys.reduce((acc, path) => {
         acc[path] =
           typeof template[path] === "string"
@@ -34,23 +38,19 @@ module.exports = async function load(initialize, options) {
             : template[path];
         return acc;
       }, {});
-  
-      if (options.dry_run) {
-        logger.debug(`Would write to index: ${METRICS_INDEX}`);
-        logger.debug(JSON.stringify(doc, null, 2));
-      }
-  
+
+      logger.debug(JSON.stringify(doc, null, 2));
       dot.object(doc);
       docs.push(doc);
     }
     return docs;
   }
-  
-  async function index_docs(docs) {
+
+  async function index_docs(index, docs) {
     const response = await client.batchIndex(docs, {
-      index: METRICS_INDEX,
+      index,
     });
-  
+
     if (response && response.body && response.body.errors) {
       const items = new Set(
         response.body.items.map((e) => e.index.error.reason)
@@ -68,19 +68,25 @@ module.exports = async function load(initialize, options) {
   async function write_data() {
     const CYCLE_NAME = `[CYCLE ${cycles + 1}]`;
     try {
-      const { n_docs_per_cycle, create_cycle_values, template } = initialize(
-        type_options,
-        Date.now(),
-        {
-          logger,
-        }
-      );
+      const {
+        n_docs_per_cycle,
+        create_cycle_values,
+        template,
+        index,
+      } = initialize(type_options, {
+        logger,
+      });
 
       logger.info(`${CYCLE_NAME} About to load ${n_docs_per_cycle} documents`);
-      const docs = generate_cycle_docs(n_docs_per_cycle, create_cycle_values, template);
+      const docs = generate_cycle_docs(
+        n_docs_per_cycle,
+        create_cycle_values,
+        template,
+        Date.now()
+      );
 
       if (!options.dry_run) {
-        await index_docs(docs);
+        await index_docs(index, docs);
 
         logger.info(
           `${CYCLE_NAME} Finished successfully loading ${docs.length} documents`
@@ -116,27 +122,44 @@ module.exports = async function load(initialize, options) {
 
   async function write_history_data() {
     const history_docs = [];
-    logger.info(`Preparing to generate ${Math.ceil((options.history.to - options.history.from) / options.history.interval)} cycles of history documents`);
+    // default to is right now, default interval is 5 min in nanoseconds
+    const { from, to = Date.now(), interval = 300000 } = options.history;
+    logger.verbose(`from: ${from}, to: ${to}, interval: ${interval}`);
+
+    logger.info(
+      `Preparing to generate ${Math.ceil(
+        (to - from) / interval
+      )} cycles of history documents`
+    );
+    const {
+      n_docs_per_cycle,
+      create_cycle_values,
+      template,
+      index,
+    } = initialize(type_options, { logger });
+
     try {
-      for (let now = options.history.from; now <= options.history.to; now += options.history.interval) {
-        const { n_docs_per_cycle, create_cycle_values, template } = initialize(
-          type_options,
-          now,
-          {
-            logger,
-          }
+      for (let now = from; now <= to; now += interval) {
+        const docs = generate_cycle_docs(
+          n_docs_per_cycle,
+          create_cycle_values,
+          template,
+          now
         );
-        const docs = generate_cycle_docs(n_docs_per_cycle, create_cycle_values, template);
-        docs.forEach(doc => history_docs.push(doc))
-        logger.info(`Generated ${history_docs.length} history docs, ${Math.ceil((options.history.to - now) / options.history.interval)} cycles remaining`)
+        docs.forEach((doc) => history_docs.push(doc));
+        logger.info(
+          `Generated ${history_docs.length} history docs, ${Math.ceil(
+            (to - now) / interval
+          )} cycles remaining`
+        );
       }
-      
+
       if (!options.dry_run) {
-        logger.info('Indexing history docs...')
-        await index_docs(history_docs);
+        logger.info("Indexing history docs...");
+        await index_docs(index, history_docs);
         logger.info(
           `Finished generating ${history_docs.length} history documents`
-        )
+        );
       }
     } catch (err) {
       logger.error(
@@ -147,13 +170,17 @@ module.exports = async function load(initialize, options) {
       }
       process.exit();
     }
-
   }
 
   if (options.history) {
+    logger.verbose("Writing history data");
     write_history_data();
-  }
-  if (options.cycles) {
+  } else if (options.cycles) {
+    logger.verbose("Writing real-time data");
     write_data();
+  } else {
+    logger.warn(
+      "No 'history' or 'cycle' blocks configured, no documents written"
+    );
   }
 };

@@ -1,14 +1,14 @@
-const load = require('../src/lib/load');
-const get_config = require('../src/lib/get_config');
-const init_pod_metrics = require('../src/doc_types/pod_metrics');
-const yargs = require('yargs/yargs');
+const load = require("../src/lib/load");
+const get_config = require("../src/lib/get_config");
+const init_pod_metrics = require("../src/doc_types/pod_metrics");
+const yargs = require("yargs/yargs");
 const argv = yargs(process.argv.slice(2)).argv;
-const dot = require('dot-object');
-const merge = require('lodash.merge');
+const dot = require("dot-object");
+const merge = require("lodash.merge");
 
 dot.object(argv);
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 /**
  * These examples do NOT use the yml config files, but define
@@ -24,15 +24,15 @@ const options = get_config(
     {},
     {
       elasticsearch: {
-        node: 'https://localhost:9200',
+        node: "https://localhost:9200",
         auth: {
-          username: 'elastic',
-          password: 'changeme',
+          username: "elastic",
+          password: "changeme",
         },
       },
-      doc_type: 'pod',
+      doc_type: "pod",
       logging: {
-        level: 'info',
+        level: "info",
       },
       dry_run: false,
       cycles: {

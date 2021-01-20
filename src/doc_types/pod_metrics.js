@@ -21,7 +21,7 @@ const IPS = [
   "10.244.2.124",
 ]; // TODO: randomize somehow? within a range?
 
-module.exports = function load_pods(options, now, { logger }) {
+module.exports = function load_pods(options, { logger }) {
   const {
     n_hosts = 3, // how many hosts the pods will be spread across
     n_pods = 30, // how many pods will be created each cycle
@@ -40,9 +40,15 @@ module.exports = function load_pods(options, now, { logger }) {
   const rand_cpu = random.normal(cpu.mean, cpu.stdev);
 
   return {
+    // set our index for this type of document explicitly so the new index strategy will work
+    index: "metrics-kubernetes.pod-slingshot",
     // n_docs_per_cycle tells the loader how many documents represent one "cycle"
     n_docs_per_cycle: n_pods,
-    create_cycle_values: (i) => {
+    create_cycle_values: (i, now) => {
+      logger.verbose(`check ${now}`);
+      logger.verbose(
+        `Creating cycle values for ${new Date(now).toISOString()}`
+      );
       // host number should increment 1 for each i value, then loop
       // pod number should be the same for each rotation through all host numbers
       // e.g. where n_hosts = 2:
