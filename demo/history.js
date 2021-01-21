@@ -23,12 +23,8 @@ const options = get_config(
   merge(
     {},
     {
-      user_config_path: __dirname + "/config.yml",
+      user_config_path: __dirname + "/demo.config.yml",
       doc_type: "pod",
-      logging: {
-        level: "info",
-      },
-      dry_run: false,
       history: {
         from: now - 1 * 24 * 60 * 60 * 1000, // 24 hours ago
         to: now,

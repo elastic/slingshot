@@ -1,5 +1,4 @@
 node_modules
 package-lock.json
-config/slingshot-config.yml
-slingshot-config.yml
+*config.yml
 test*.js

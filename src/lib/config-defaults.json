@@ -1,4 +1,6 @@
 {
+  "logging.level": "info",
+  "dry_run": false,
   "cycles.continuous": false,
   "cycles.n": false,
   "cycles.ms_pause_after_each": 30000,

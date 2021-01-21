@@ -23,16 +23,11 @@ const options = get_config(
   merge(
     {},
     {
-      user_config_path: __dirname + "/config.yml",
+      user_config_path: __dirname + "/demo.config.yml",
       doc_type: "pod",
-      logging: {
-        level: "info",
-      },
-      dry_run: false,
       cycles: {
-        continuous: true, // script will run continuously
-        ms_pause_after_each: 3000, // script will wait this long after each cycle (each batch of docs is a cycle)
-        // n: 3 // script will run this number of times, and then stop
+        continuous: true,
+        ms_pause_after_each: 3000, // wait this long (ms) after each batch
       },
       types: {
         pod: {
