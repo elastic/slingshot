@@ -1,3 +1,4 @@
+# Rename this file to config.yml and reference it in your example scripts via user_config_path
 elasticsearch:
   node: 
   auth:
