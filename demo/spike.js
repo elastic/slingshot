@@ -36,15 +36,15 @@ const options = get_config(
       },
       types: {
         pod: {
-          n_hosts: 3,
-          n_pods: 10,
+          n_hosts: 1,
+          n_pods: 1,
           metrics: {
             cpu: {
-              mean: 0.2,
+              mean: 0.95,
               stdev: 0.05,
             },
             memory: {
-              mean: 0.2,
+              mean: 0.95,
               stdev: 0.05,
             },
           },

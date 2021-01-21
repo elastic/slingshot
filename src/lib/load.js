@@ -129,7 +129,11 @@ module.exports = async function load(initialize, options) {
     logger.info(
       `Preparing to generate ${Math.ceil(
         (to - from) / interval
-      )} cycles of history documents`
+      )} cycles of history documents, one cycle every ${
+        interval / 1000
+      }s between ${new Date(from).toLocaleString()} and ${new Date(
+        to
+      ).toLocaleString()}`
     );
     const {
       n_docs_per_cycle,
@@ -147,7 +151,7 @@ module.exports = async function load(initialize, options) {
           now
         );
         docs.forEach((doc) => history_docs.push(doc));
-        logger.info(
+        logger.verbose(
           `Generated ${history_docs.length} history docs, ${Math.ceil(
             (to - now) / interval
           )} cycles remaining`

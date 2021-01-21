@@ -29,10 +29,10 @@ const options = get_config(
         level: "info",
       },
       dry_run: false,
-      cycles: {
-        continuous: true, // script will run continuously
-        ms_pause_after_each: 3000, // script will wait this long after each cycle (each batch of docs is a cycle)
-        // n: 3 // script will run this number of times, and then stop
+      history: {
+        from: now - 1 * 24 * 60 * 60 * 1000, // 24 hours ago
+        to: now,
+        interval: 300000, // 5 min interval
       },
       types: {
         pod: {
@@ -40,12 +40,12 @@ const options = get_config(
           n_pods: 10,
           metrics: {
             cpu: {
-              mean: 0.2,
-              stdev: 0.05,
+              mean: 0.3,
+              stdev: 0.15,
             },
             memory: {
-              mean: 0.2,
-              stdev: 0.05,
+              mean: 0.3,
+              stdev: 0.15,
             },
           },
         },
