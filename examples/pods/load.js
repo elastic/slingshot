@@ -1,6 +1,6 @@
-const load = require("../src/lib/load");
-const get_config = require("../src/lib/get_config");
-const init_pod_metrics = require("../src/doc_types/pod_metrics");
+const load = require("../../src/lib/load");
+const get_config = require("../../src/lib/get_config");
+const init_pod_metrics = require("../../src/doc_types/pod_metrics");
 const yargs = require("yargs/yargs");
 const argv = yargs(process.argv.slice(2)).argv;
 const dot = require("dot-object");
@@ -12,8 +12,7 @@ dot.object(argv);
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 /**
- * These examples do NOT use the yml config files, but define
- * config here in JS instead. You can pass in command line flags
+ * You can pass in command line flags
  * to override any of these options, e.g.
  *
  * node examples/pod-script.js --dry_run=true
@@ -23,7 +22,7 @@ const options = get_config(
   merge(
     {},
     {
-      user_config_path: __dirname + "/demo.config.yml",
+      user_config_path: __dirname + "/config.yml",
       doc_type: "pod",
       cycles: {
         continuous: true,
