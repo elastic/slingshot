@@ -124,11 +124,13 @@ module.exports = async function load(initialize, options) {
     const history_docs = [];
     // default to is right now, default interval is 5 min in nanoseconds
     const { from, to = Date.now(), interval = 300000 } = options.history;
+    const start = new Date(from).getTime();
+    const end = new Date(to).getTime();
     logger.verbose(`from: ${from}, to: ${to}, interval: ${interval}`);
 
     logger.info(
       `Preparing to generate ${Math.ceil(
-        (to - from) / interval
+        (end - start) / interval
       )} cycles of history documents, one cycle every ${
         interval / 1000
       }s between ${new Date(from).toLocaleString()} and ${new Date(
@@ -143,7 +145,7 @@ module.exports = async function load(initialize, options) {
     } = initialize(type_options, { logger });
 
     try {
-      for (let now = from; now <= to; now += interval) {
+      for (let now = start; now <= end; now += interval) {
         const docs = generate_cycle_docs(
           n_docs_per_cycle,
           create_cycle_values,
@@ -153,7 +155,7 @@ module.exports = async function load(initialize, options) {
         docs.forEach((doc) => history_docs.push(doc));
         logger.verbose(
           `Generated ${history_docs.length} history docs, ${Math.ceil(
-            (to - now) / interval
+            (end - now) / interval
           )} cycles remaining`
         );
       }

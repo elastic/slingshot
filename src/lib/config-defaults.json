@@ -1,4 +1,5 @@
 {
+  "user_config_path": "slingshot-config.yml",
   "logging.level": "info",
   "dry_run": false,
   "cycles.continuous": false,

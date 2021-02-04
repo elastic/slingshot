@@ -5,7 +5,7 @@
   "author": "Jason Rhodes <jason.matthew.rhodes@gmail.com>",
   "license": "MIT",
   "bin": {
-    "slingshot": "./bin/slingshot.js"
+    "slingshot": "./src/bin/slingshot.js"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.9.0",
