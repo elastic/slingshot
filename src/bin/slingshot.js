@@ -11,7 +11,7 @@ yargs(process.argv.slice(2))
       });
     },
     (argv) => {
-      console.log(JSON.stringify(argv));
+      // console.log(JSON.stringify(argv));
     }
   )
   .help().argv;

@@ -9,8 +9,12 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.9.0",
+    "@elastic/eslint-config-kibana": "^0.15.0",
     "dot-object": "^2.1.4",
+    "faker": "^5.4.0",
+    "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
+    "moment": "^2.29.1",
     "mustache": "^4.0.1",
     "random": "^2.2.0",
     "uuid": "^8.3.0",

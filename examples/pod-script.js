@@ -24,10 +24,10 @@ const options = get_config(
     {},
     {
       elasticsearch: {
-        node: "https://localhost:9200",
+        node: "https://logs-testing-for-7-12.es.us-central1.gcp.foundit.no:9243",
         auth: {
           username: "elastic",
-          password: "changeme",
+          password: "2A0nVQ0ONkpOL9WR0RJWCN1k",
         },
       },
       doc_type: "pod",
@@ -37,7 +37,7 @@ const options = get_config(
       dry_run: false,
       cycles: {
         continuous: true, // script will run continuously, like n = Infinity
-        ms_pause_after_each: 15000, // script will wait this long after each cycle (each batch of docs is a cycle)
+        ms_pause_after_each: 10000, // script will wait this long after each cycle (each batch of docs is a cycle)
         // n: 3 // script will run this number of times, and then stop
       },
       // history: {
@@ -46,6 +46,20 @@ const options = get_config(
       //   interval: 60000,
       // },
       types: {
+        host: {
+          n_hosts: 3,
+          metrics: {
+            cpu: {
+              mean: 0.5,
+              stdev: 0.5,
+            },
+            memory: {
+              mean: 0.7,
+              stdev: 0.005,
+            },
+
+          }
+        },
         pod: {
           n_hosts: 3,
           n_pods: 10,
@@ -55,8 +69,8 @@ const options = get_config(
               stdev: 0.2,
             },
             memory: {
-              mean: 0.4,
-              stdev: 0.2,
+              mean: 0.1,
+              stdev: 0.05,
             },
           },
         },
