@@ -1,3 +1,4 @@
+#!/usr/bin/env ts-node
 const load = require("../src/lib/load");
 const get_config = require("../src/lib/get_config");
 const initHostMetrics = require("../src/doc_types/host_metrics");

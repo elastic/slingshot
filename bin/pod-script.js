@@ -1,10 +1,11 @@
+#!/usr/bin/env ts-node
 const load = require("../src/lib/load");
 const get_config = require("../src/lib/get_config");
 const init_pod_metrics = require("../src/doc_types/pod_metrics");
 const yargs = require("yargs/yargs");
 const argv = yargs(process.argv.slice(2)).argv;
 const dot = require("dot-object");
-const merge = require("lodash.merge");
+import merge from 'lodash.merge';
 
 dot.object(argv);
 
