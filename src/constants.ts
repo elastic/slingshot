@@ -1,3 +1,5 @@
+export const DATA_STREAM = 'metrics-system-slingshot';
+
 export const FAKE_IDENTIFIER = '_SS';
 
 export const PLATFORMS = [

@@ -2,6 +2,7 @@ import { Moment } from 'moment';
 import { setWith, isFunction, isString } from 'lodash';
 import Mustache from 'mustache';
 import { Logger } from 'winston';
+import dot from 'dot-object';
 import { TypeGenerator } from '../types';
 
 export function generateCycleDocs(
@@ -28,8 +29,7 @@ export function generateCycleDocs(
       }, {});
 
       logger.debug(JSON.stringify(doc, null, 2));
-      dot.object(doc);
-      docs.push(doc);
+      docs.push(dot.object(doc));
     });
   }
   return docs;

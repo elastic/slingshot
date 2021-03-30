@@ -1,4 +1,4 @@
-import dot from 'dot-object';
+import * as dot from 'dot-object';
 import fs from 'fs';
 import { PathReporter } from 'io-ts/PathReporter';
 import configDefaults from './config-defaults.json';
@@ -7,7 +7,7 @@ import { ConfigurationRT, Configuration } from '../types';
 // converts dot notation object into fully nested object
 const defaultConfig = dot.object(configDefaults) as Configuration;
 
-function readConfig(path: string, userConfig: Configuration) {
+function readConfig(path: string, userConfig: Partial<Configuration>) {
   if (!path) {
     return { ...defaultConfig };
   }
@@ -21,7 +21,7 @@ function readConfig(path: string, userConfig: Configuration) {
   return { ...defaultConfig, ...fileConfig, ...userConfig };
 }
 
-export function getConfig(userConfig: Configuration, path?: string) {
+export function getConfig(userConfig: Partial<Configuration>, path?: string) {
   if (path) {
     return readConfig(path, userConfig);
   }

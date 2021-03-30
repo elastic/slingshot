@@ -1,13 +1,6 @@
 import { createLogger, format, transports } from 'winston';
 
-interface Options {
-  logging: {
-    level: 'info' | 'debug' | 'verbose';
-  };
-}
-
-export function getLogger({ logging = { level: 'info' } }: Options) {
-  const { level } = logging;
+export function getLogger(level = 'info') {
   const logger = createLogger({
     level,
     format: format.combine(

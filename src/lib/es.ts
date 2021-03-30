@@ -1,6 +1,7 @@
 import ES from '@elastic/elasticsearch';
 import uuid from 'uuid';
 import { TransportRequestOptions } from '@elastic/elasticsearch/lib/Transport';
+import { Logger } from 'winston';
 import { flatMap } from './flat';
 
 export interface ClientBatchIndexOptions extends TransportRequestOptions {
@@ -9,9 +10,25 @@ export interface ClientBatchIndexOptions extends TransportRequestOptions {
 
 export class Client {
   es: ES.Client;
+  logger: Logger;
 
-  constructor(config: ES.ClientOptions) {
+  constructor(config: ES.ClientOptions, logger: Logger) {
     this.es = new ES.Client(config);
+    this.logger = logger;
+  }
+
+  async purge(dataStream: string) {
+    try {
+      const response = await this.es.indices.deleteDataStream({
+        name: dataStream
+      });
+      return response;
+    } catch (e) {
+      if (e.meta.statusCode !== 404) {
+        throw e;
+      }
+      this.logger.info(`  * The data stream "${dataStream}" does not exist.`);
+    }
   }
 
   async batchIndex(

@@ -1,5 +1,4 @@
 import * as rt from 'io-ts';
-import { ClientOptions } from '@elastic/elasticsearch';
 import { Logger } from 'winston';
 import { Moment } from 'moment';
 
@@ -25,10 +24,10 @@ export type DistributionDef = rt.TypeOf<typeof DistributionDefRT>;
 
 export const SpikeDistributionDefRT = rt.intersection([
   rt.type({
-    ...DistributionDefRT.props,
-    duration: rt.string
+    ...DistributionDefRT.props
   }),
   rt.partial({
+    duration: rt.string,
     hours: rt.array(rt.number),
     minutes: rt.array(rt.number)
   })
@@ -48,7 +47,6 @@ export const TypeDefRT = rt.intersection([
   }),
   rt.partial({
     offsetBy: rt.number,
-    dryRun: rt.boolean,
     cloudProviders: rt.array(rt.string),
     platforms: rt.array(rt.string),
     cloudRegions: rt.array(rt.string),
@@ -77,19 +75,14 @@ export const ConfigurationRT = rt.intersection([
     timerange: TimerangeRT
   }),
   rt.partial({
-    types: TypesRT
+    types: TypesRT,
+    dryRun: rt.boolean,
+    purge: rt.boolean,
+    logLevel: rt.string
   })
 ]);
 
-export interface Configuration {
-  elasticsearch: ClientOptions;
-  timerange: Timerange;
-  types?: Types;
-  dryRun?: boolean;
-  logging: {
-    level: 'info' | 'debug' | 'verbose';
-  };
-}
+export type Configuration = rt.TypeOf<typeof ConfigurationRT>;
 
 export interface SlingshotContext {
   logger: Logger;
