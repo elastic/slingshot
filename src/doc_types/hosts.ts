@@ -85,8 +85,8 @@ export function initializeHosts(
 
       const host = HOST_CACHE[i];
 
-      const cpuPct = getMetric(now, 'cpu', typeDef, { min: 0, max: 0 });
-      const memoryPct = getMetric(now, 'memory', typeDef, { min: 0, max: 0 });
+      const cpuPct = getMetric(now, 'cpu', typeDef, { min: 0, max: 1 });
+      const memoryPct = getMetric(now, 'memory', typeDef, { min: 0, max: 1 });
       const loadValue = getMetric(now, 'load', typeDef, {
         min: 0,
         max: host.cores
