@@ -10,6 +10,7 @@ import {
   CLOUD_REGIONS,
   NAMESPACES
 } from '../constants';
+import { getTotalTransferFor } from '../lib/transfer_cache';
 
 interface PodDef {
   id: string;
@@ -32,6 +33,10 @@ export interface CycleValues {
   eventDuration: number;
   cpuPct: number;
   memoryPct: number;
+  rxValue: number;
+  txValue: number;
+  rxTotal: number;
+  txTotal: number;
 }
 
 const POD_CACHE: Record<string, PodDef> = {};
@@ -66,6 +71,14 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
       logger.verbose(`Creating cycle values for ${now.toISOString()}`);
 
       const pod = POD_CACHE[i];
+      const rxValue = getMetric(now, 'rx', typeDef, {
+        min: 0,
+        max: Number.MAX_SAFE_INTEGER
+      });
+      const txValue = getMetric(now, 'tx', typeDef, {
+        min: 0,
+        max: Number.MAX_SAFE_INTEGER
+      });
 
       return {
         date: now.toISOString(),
@@ -75,7 +88,11 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
         cloudRegion: typeDef.addCloudData ? pod.region : '',
         eventDuration: random(80000000, 85000000),
         memoryPct: getMetric(now, 'memory', typeDef, { min: 0, max: 1 }),
-        cpuPct: getMetric(now, 'cpu', typeDef, { min: 0, max: 1 })
+        cpuPct: getMetric(now, 'cpu', typeDef, { min: 0, max: 1 }),
+        rxValue,
+        txValue,
+        rxTotal: getTotalTransferFor(`${pod.id}:rx`, rxValue),
+        txTotal: getTotalTransferFor(`${pod.id}:tx`, txValue)
       };
     },
     template: [
@@ -107,6 +124,14 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
           memoryPct * 0.5,
         'kubernetes.pod.memory.usage.limit.pct': ({ memoryPct }: CycleValues) =>
           memoryPct,
+        'kubernetes.pod.network.in.bytes': ({ rxTotal }: CycleValues) =>
+          rxTotal,
+        'kubernetes.pod.network.in.errors': ({ rxTotal }: CycleValues) =>
+          rxTotal * 0.0002,
+        'kubernetes.pod.network.out.bytes': ({ txTotal }: CycleValues) =>
+          txTotal,
+        'kubernetes.pod.network.out.errors': ({ txTotal }: CycleValues) =>
+          txTotal * 0.0002,
         'kubernetes.pod.name': '{{pod.name}}',
         'kubernetes.pod.status.phase': 'running',
         'kubernetes.pod.status.ready': true,

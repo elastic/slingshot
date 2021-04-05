@@ -3,6 +3,7 @@ import { times, sample, cloneDeep } from 'lodash';
 import moment, { Moment } from 'moment';
 import { randomInt, getMetric } from '../lib/value_helpers';
 import { SlingshotContext, TypeDef } from '../types';
+import { getTotalTransferFor } from '../lib/transfer_cache';
 import {
   FAKE_IDENTIFIER,
   PLATFORMS,
@@ -10,8 +11,7 @@ import {
   CLOUD_REGIONS
 } from '../constants';
 
-const TRANSFER_CACHE: Record<string, number> = {};
-const HOST_CACHE: Record<string, HostDef> = {};
+const hostCache = new Map<number, HostDef>();
 
 interface HostDef {
   id: string;
@@ -48,10 +48,10 @@ export function initializeHosts(
   { logger }: SlingshotContext
 ) {
   times(typeDef.total).forEach(i => {
-    if (HOST_CACHE[i]) {
-      return HOST_CACHE[i];
+    if (hostCache.has(i)) {
+      return hostCache.get(i);
     }
-    HOST_CACHE[i] = {
+    hostCache.set(i, {
       name: `host-${i + (typeDef.offsetBy || 0)}`,
       ip: [faker.internet.ip()],
       id: faker.random.uuid(),
@@ -71,7 +71,7 @@ export function initializeHosts(
       region: sample(typeDef.cloudRegions || CLOUD_REGIONS) || '',
       cores: randomInt(1, 8),
       createdAt: moment()
-    };
+    });
   });
 
   const metricsetPeriod = 10000;
@@ -83,7 +83,11 @@ export function initializeHosts(
       logger.verbose(`check ${now.valueOf()}`);
       logger.verbose(`Creating cycle values for ${now.toISOString()}`);
 
-      const host = HOST_CACHE[i];
+      const host = hostCache.get(i);
+
+      if (!host) {
+        throw new Error(`Could not find host-${i} in the initial cache`);
+      }
 
       const cpuPct = getMetric(now, 'cpu', typeDef, { min: 0, max: 1 });
       const memoryPct = getMetric(now, 'memory', typeDef, { min: 0, max: 1 });
@@ -100,19 +104,6 @@ export function initializeHosts(
         max: Number.MAX_SAFE_INTEGER
       });
 
-      const shouldRXReset =
-        TRANSFER_CACHE[`${host.name}-rx`] &&
-        TRANSFER_CACHE[`${host.name}-rx`] + rxValue < Number.MAX_SAFE_INTEGER;
-      const shouldTXReset =
-        TRANSFER_CACHE[`${host.name}-tx`] &&
-        TRANSFER_CACHE[`${host.name}-tx`] + txValue < Number.MAX_SAFE_INTEGER;
-      TRANSFER_CACHE[`${host.name}-rx`] = shouldRXReset
-        ? TRANSFER_CACHE[`${host.name}-rx`] + rxValue
-        : rxValue;
-      TRANSFER_CACHE[`${host.name}-tx`] = shouldTXReset
-        ? TRANSFER_CACHE[`${host.name}-tx`] + txValue
-        : txValue;
-
       return {
         date: now.toISOString(),
         host: cloneDeep(host),
@@ -125,8 +116,8 @@ export function initializeHosts(
         loadValue,
         rxValue,
         txValue,
-        rxTotal: TRANSFER_CACHE[`${host.name}-rx`],
-        txTotal: TRANSFER_CACHE[`${host.name}-tx`],
+        rxTotal: getTotalTransferFor(`${host.name}:rx`, rxValue),
+        txTotal: getTotalTransferFor(`${host.name}:tx`, txValue),
         uptime: moment().valueOf() - host.createdAt.valueOf()
       };
     },

@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit -p ."
   },
   "dependencies": {
-    "@elastic/datemath": "link:../kibana/packages/elastic-datemath",
+    "@elastic/datemath": "^5.0.3",
     "@elastic/elasticsearch": "^7.9.0",
     "@types/dot-object": "^2.1.2",
     "@types/faker": "^5.1.7",
