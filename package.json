@@ -5,13 +5,36 @@
   "author": "Jason Rhodes <jason.matthew.rhodes@gmail.com>",
   "license": "MIT",
   "bin": {
-    "slingshot": "./src/bin/slingshot.js"
+    "slingshot": "./bin/slingshot.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
   },
   "dependencies": {
+    "@elastic/datemath": "^5.0.3",
     "@elastic/elasticsearch": "^7.9.0",
+    "@types/dot-object": "^2.1.2",
+    "@types/faker": "^5.1.7",
+    "@types/lodash": "^4.14.168",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/moment": "^2.13.0",
+    "@types/mustache": "^4.1.1",
+    "@types/node": "^14.14.36",
+    "@types/random": "^2.1.1",
+    "@types/uuid": "^8.3.0",
+    "@types/winston": "^2.4.4",
+    "@types/yargs": "^16.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
     "dot-object": "^2.1.4",
+    "faker": "^5.4.0",
+    "fp-ts": "2.5.0",
+    "io-ts": "^2.2.16",
+    "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
+    "moment": "^2.29.1",
     "mustache": "^4.0.1",
+    "prettier": "1.13.0",
     "random": "^2.2.0",
     "uuid": "^8.3.0",
     "winston": "^3.3.3",
@@ -19,7 +42,32 @@
     "yargs": "^16.1.0"
   },
   "devDependencies": {
+    "@elastic/eslint-config-kibana": "link:../kibana/packages/elastic-eslint-config-kibana",
+    "@kbn/eslint-plugin-eslint": "link:../kibana/packages/kbn-eslint-plugin-eslint",
+    "babel-eslint": "^8.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-import-resolver-node": "0.3.2",
+    "eslint-import-resolver-webpack": "0.11.1",
+    "eslint-module-utils": "2.5.0",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-ban": "^1.4.0",
+    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-mocha": "^6.2.2",
+    "eslint-plugin-no-unsanitized": "^3.0.2",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prefer-object-spread": "^1.2.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-perf": "^3.2.3",
+    "install-peers": "^1.0.3",
+    "prettier": "^2.2.0",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.1.3"
   }
 }

@@ -1,0 +1,36 @@
+{
+  "elasticsearch": {
+    "node": "https://localhost:9200",
+    "auth": {
+      "username": "elastic",
+      "password": "changeme"
+    },
+    "ssl": {
+      "rejectUnauthorized": false
+    }
+  },
+  "timerange": {
+    "start": "now-1d/d",
+    "end": "now+1d/d",
+    "interval": 10000
+  },
+  "types": {
+    "hosts": {
+      "total": 10,
+      "addCloudData": true,
+      "spike": [
+        { "name": "memory", "mean": 1, "stdev": 0, "duration": "15m" },
+        { "name": "rx",  "mean": 10000000, "stdev": 100000, "duration": "5m" }
+      ],
+      "normal": [
+        { "name": "memory", "mean": 0.6, "stdev": 0 },
+        { "name": "cpu", "mean": 0.4, "stdev": 0.1 },
+        { "name": "load", "mean": 1, "stdev": 0.1 },
+        { "name": "rx", "mean": 1000, "stdev": 500 },
+        { "name": "tx", "mean": 1000, "stdev": 500 }
+      ]
+    }
+  }
+}
+
+

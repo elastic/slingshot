@@ -1,10 +1,11 @@
 {
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "bin/**/*"
   ],
   "compilerOptions": {
     "declaration": true,
-    "target": "es2018",
+    "target": "es2019",
     "lib": [
       "es2019"
     ],
@@ -13,6 +14,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noUnusedLocals": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   }
 }

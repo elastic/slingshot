@@ -1,4 +1,7 @@
 node_modules
 package-lock.json
 *config.yml
+config.json
 test*.js
+yarn.lock
+*.log

@@ -1,15 +1,7 @@
 {
-  "user_config_path": "slingshot-config.yml",
-  "logging.level": "info",
-  "dry_run": false,
-  "cycles.continuous": false,
-  "cycles.n": false,
-  "cycles.ms_pause_after_each": 30000,
-  "types.pod.indices.metrics": "metrics-kubernetes.pod-slingshot",
-  "types.pod.n_hosts": 3,
-  "types.pod.n_pods": 30,
-  "types.pod.metrics.cpu.mean": 0.4,
-  "types.pod.metrics.cpu.stdev": 0.2,
-  "types.pod.metrics.memory.mean": 0.5,
-  "types.pod.metrics.memory.stdev": 0.1
+  "logLevel": "info",
+  "elasticsearch.node": "http://localhost:9200",
+  "timerange.start": "now-1d/d",
+  "timerange.end": "now",
+  "timerange.interval": 10000
 }
