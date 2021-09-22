@@ -13,19 +13,13 @@ export async function writeHistoryData(
   typeDef: TypeDef
 ) {
   // default to is right now, default interval is 5 min in nanoseconds
-  logger.verbose(
-    `from: ${timerange.start}, to: ${timerange.end}, interval: ${
-      timerange.interval
-    }`
-  );
+  logger.verbose(`from: ${timerange.start}, to: ${timerange.end}, interval: ${timerange.interval}`);
 
   const startTime = dateMath.parse(timerange.start);
   const endTime = dateMath.parse(timerange.end, { roundUp: true });
 
   if (!startTime) {
-    throw new Error(
-      `"${timerange.start}" is not a valid date math expression.`
-    );
+    throw new Error(`"${timerange.start}" is not a valid date math expression.`);
   }
 
   if (!endTime) {
@@ -34,7 +28,7 @@ export async function writeHistoryData(
 
   logger.info(
     `Preparing to generate ${Math.ceil(
-      (startTime.valueOf() - endTime.valueOf()) / timerange.interval
+      (endTime.valueOf() - startTime.valueOf()) / timerange.interval
     )} cycles of history documents, one cycle every ${timerange.interval /
       1000}s between ${startTime.toLocaleString()} and ${endTime.toLocaleString()}`
   );
