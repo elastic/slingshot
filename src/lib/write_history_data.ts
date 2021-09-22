@@ -50,15 +50,14 @@ export async function writeHistoryData(
         logger,
         typeGenerator
       );
-      logger.verbose(
-        `Generated ${docs.length} history docs, ${Math.ceil(
-          (endTime.valueOf() - startTime.valueOf()) / timerange.interval
-        )} cycles remaining`
+      const cyclesRemaining = Math.ceil(
+        (endTime.valueOf() - startTime.valueOf()) / timerange.interval
       );
+      logger.verbose(`Generated ${docs.length} history docs, ${cyclesRemaining} cycles remaining`);
 
       docs.forEach((d: any) => docQueue.push(d));
 
-      if (docQueue.length >= 10000) {
+      if (docQueue.length >= 10000 || cyclesRemaining <= 0) {
         logger.info('Indexing history docs...');
         await indexDocs(client, typeGenerator.index, docQueue);
         logger.info(`Finished generating ${docQueue.length} history documents`);
