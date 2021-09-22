@@ -4,12 +4,7 @@ import moment, { Moment } from 'moment';
 import { randomInt, getMetric } from '../lib/value_helpers';
 import { SlingshotContext, TypeDef } from '../types';
 import { getTotalTransferFor } from '../lib/transfer_cache';
-import {
-  FAKE_IDENTIFIER,
-  PLATFORMS,
-  CLOUD_PROVIDERS,
-  CLOUD_REGIONS
-} from '../constants';
+import { FAKE_IDENTIFIER, PLATFORMS, CLOUD_PROVIDERS, CLOUD_REGIONS } from '../constants';
 
 const hostCache = new Map<number, HostDef>();
 
@@ -43,10 +38,7 @@ export interface CycleValues {
   uptime: number;
 }
 
-export function initializeHosts(
-  typeDef: TypeDef,
-  { logger }: SlingshotContext
-) {
+export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) {
   times(typeDef.total).forEach(i => {
     if (hostCache.has(i)) {
       return hostCache.get(i);
@@ -54,7 +46,7 @@ export function initializeHosts(
     hostCache.set(i, {
       name: `host-${i + (typeDef.offsetBy || 0)}`,
       ip: [faker.internet.ip()],
-      id: faker.random.uuid(),
+      id: faker.datatype.uuid(),
       mac: [faker.internet.mac()],
       platform: sample(typeDef.platforms || PLATFORMS) || '',
       totalMemory:
@@ -64,13 +56,13 @@ export function initializeHosts(
             Math.pow(1024, 2) * 8,
             Math.pow(1024, 2) * 16,
             Math.pow(1024, 2) * 32,
-            Math.pow(1024, 2) * 64
+            Math.pow(1024, 2) * 64,
           ]
         ) || Math.pow(1024, 2) * 4,
       provider: sample(typeDef.cloudProviders || CLOUD_PROVIDERS) || '',
       region: sample(typeDef.cloudRegions || CLOUD_REGIONS) || '',
       cores: randomInt(1, 8),
-      createdAt: moment()
+      createdAt: moment(),
     });
   });
 
@@ -93,15 +85,15 @@ export function initializeHosts(
       const memoryPct = getMetric(now, 'memory', typeDef, { min: 0, max: 1 });
       const loadValue = getMetric(now, 'load', typeDef, {
         min: 0,
-        max: host.cores
+        max: host.cores,
       });
       const rxValue = getMetric(now, 'rx', typeDef, {
         min: 0,
-        max: Number.MAX_SAFE_INTEGER
+        max: Number.MAX_SAFE_INTEGER,
       });
       const txValue = getMetric(now, 'tx', typeDef, {
         min: 0,
-        max: Number.MAX_SAFE_INTEGER
+        max: Number.MAX_SAFE_INTEGER,
       });
 
       return {
@@ -118,7 +110,7 @@ export function initializeHosts(
         txValue,
         rxTotal: getTotalTransferFor(`${host.name}:rx`, rxValue),
         txTotal: getTotalTransferFor(`${host.name}:tx`, txValue),
-        uptime: moment().valueOf() - host.createdAt.valueOf()
+        uptime: moment().valueOf() - host.createdAt.valueOf(),
       };
     },
     template: [
@@ -150,21 +142,16 @@ export function initializeHosts(
         'host.cpu.pct': ({ cpuPct }: CycleValues) => cpuPct,
         'system.cpu.cores': ({ host }: CycleValues) => host.cores,
         'system.cpu.idle.norm.pct': ({ cpuPct }: CycleValues) => cpuPct,
-        'system.cpu.idle.pct': ({ cpuPct, host }: CycleValues) =>
-          cpuPct * host.cores,
+        'system.cpu.idle.pct': ({ cpuPct, host }: CycleValues) => cpuPct * host.cores,
         'system.cpu.nice.norm.pct': 0,
         'system.cpu.nice.pct': 0,
         'system.cpu.system.norm.pct': ({ cpuPct }: CycleValues) => cpuPct * 0.2,
-        'system.cpu.system.pct': ({ cpuPct, loadValue }: CycleValues) =>
-          cpuPct * 0.2 * loadValue,
-        'system.cpu.total.norm.pct': ({ cpuPct, loadValue }: CycleValues) =>
-          cpuPct * loadValue,
-        'system.cpu.total.pct': ({ cpuPct, loadValue }: CycleValues) =>
-          cpuPct * loadValue,
+        'system.cpu.system.pct': ({ cpuPct, loadValue }: CycleValues) => cpuPct * 0.2 * loadValue,
+        'system.cpu.total.norm.pct': ({ cpuPct, loadValue }: CycleValues) => cpuPct * loadValue,
+        'system.cpu.total.pct': ({ cpuPct, loadValue }: CycleValues) => cpuPct * loadValue,
         'system.cpu.user.norm.pct': ({ cpuPct, loadValue }: CycleValues) =>
           cpuPct * 0.8 * loadValue,
-        'system.cpu.user.pct': ({ cpuPct, loadValue }: CycleValues) =>
-          cpuPct * 0.8 * loadValue
+        'system.cpu.user.pct': ({ cpuPct, loadValue }: CycleValues) => cpuPct * 0.8 * loadValue,
       },
       {
         '@timestamp': '{{date}}',
@@ -195,22 +182,19 @@ export function initializeHosts(
           Math.floor((1 - memoryPct) * host.totalMemory * 0.9),
         'system.memory.actual.used.bytes': ({ host, memoryPct }: CycleValues) =>
           Math.floor(memoryPct * host.totalMemory * 0.9),
-        'system.memory.actual.used.pct': ({ memoryPct }: CycleValues) =>
-          memoryPct * 0.9,
+        'system.memory.actual.used.pct': ({ memoryPct }: CycleValues) => memoryPct * 0.9,
         'system.memory.total': ({ host }: CycleValues) => host.totalMemory,
         'system.memory.swap.free': ({ host, memoryPct }: CycleValues) =>
           Math.floor((1 - memoryPct) * host.totalMemory * 0.2),
         'system.memory.swap.used.bytes': ({ host, memoryPct }: CycleValues) =>
           Math.floor(memoryPct * host.totalMemory * 0.2),
-        'system.memory.swap.used.pct': ({ memoryPct }: CycleValues) =>
-          memoryPct * 0.2,
-        'system.memory.swap.total': ({ host }: CycleValues) =>
-          Math.floor(host.totalMemory * 0.2),
+        'system.memory.swap.used.pct': ({ memoryPct }: CycleValues) => memoryPct * 0.2,
+        'system.memory.swap.total': ({ host }: CycleValues) => Math.floor(host.totalMemory * 0.2),
         'system.memory.free': ({ host, memoryPct }: CycleValues) =>
           Math.floor((1 - memoryPct) * host.totalMemory),
         'system.memory.used.bytes': ({ host, memoryPct }: CycleValues) =>
           Math.floor(memoryPct * host.totalMemory),
-        'system.memory.used.pct': ({ memoryPct }: CycleValues) => memoryPct
+        'system.memory.used.pct': ({ memoryPct }: CycleValues) => memoryPct,
       },
       {
         '@timestamp': '{{date}}',
@@ -237,15 +221,12 @@ export function initializeHosts(
         'metricset.name': 'load',
         'metricset.period': metricsetPeriod,
         'service.type': 'slingshot-host',
-        'system.load.1': ({ host, loadValue }: CycleValues) =>
-          loadValue * host.cores,
-        'system.load.5': ({ host, loadValue }: CycleValues) =>
-          loadValue * 0.85 * host.cores,
-        'system.load.15': ({ host, loadValue }: CycleValues) =>
-          loadValue * 0.75 * host.cores,
+        'system.load.1': ({ host, loadValue }: CycleValues) => loadValue * host.cores,
+        'system.load.5': ({ host, loadValue }: CycleValues) => loadValue * 0.85 * host.cores,
+        'system.load.15': ({ host, loadValue }: CycleValues) => loadValue * 0.75 * host.cores,
         'system.load.norm.1': ({ loadValue }: CycleValues) => loadValue,
         'system.load.norm.5': ({ loadValue }: CycleValues) => loadValue * 0.85,
-        'system.load.norm.15': ({ loadValue }: CycleValues) => loadValue * 0.75
+        'system.load.norm.15': ({ loadValue }: CycleValues) => loadValue * 0.75,
       },
       {
         '@timestamp': '{{date}}',
@@ -274,21 +255,17 @@ export function initializeHosts(
         'service.type': 'slingshot-host',
         'system.network.name': 'en0',
         'system.network.out.bytes': ({ txTotal }: CycleValues) => txTotal,
-        'system.network.out.packets': ({ txTotal }: CycleValues) =>
-          txTotal * 0.002,
-        'system.network.out.errors': ({ txTotal }: CycleValues) =>
-          txTotal * 0.0002,
-        'system.network.out.dropped': ({ txTotal }: CycleValues) =>
-          txTotal * 0.0001,
+        'system.network.out.packets': ({ txTotal }: CycleValues) => txTotal * 0.002,
+        'system.network.out.errors': ({ txTotal }: CycleValues) => txTotal * 0.0002,
+        'system.network.out.dropped': ({ txTotal }: CycleValues) => txTotal * 0.0001,
         'system.network.in.bytes': ({ rxTotal }: CycleValues) => rxTotal,
-        'system.network.in.packets': ({ rxTotal }: CycleValues) =>
-          rxTotal * 0.002,
+        'system.network.in.packets': ({ rxTotal }: CycleValues) => rxTotal * 0.002,
         'system.network.in.errors': 0,
         'system.network.in.dropped': 0,
         'host.network.ingress.bytes': ({ rxValue }: CycleValues) => rxValue,
         'host.network.egress.bytes': ({ txValue }: CycleValues) => txValue,
         'host.network.in.bytes': ({ rxValue }: CycleValues) => rxValue,
-        'host.network.out.bytes': ({ txValue }: CycleValues) => txValue
+        'host.network.out.bytes': ({ txValue }: CycleValues) => txValue,
       },
       {
         '@timestamp': '{{date}}',
@@ -315,8 +292,8 @@ export function initializeHosts(
         'metricset.name': 'uptime',
         'metricset.period': metricsetPeriod,
         'service.type': 'slingshot-host',
-        'system.uptime.duration.ms': ({ uptime }: CycleValues) => uptime
-      }
-    ]
+        'system.uptime.duration.ms': ({ uptime }: CycleValues) => uptime,
+      },
+    ],
   };
 }
