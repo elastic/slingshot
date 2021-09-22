@@ -1,20 +1,16 @@
 {
-  "include": [
-    "src/**/*",
-    "bin/**/*"
-  ],
+  "include": ["src/**/*", "bin/**/*"],
   "compilerOptions": {
     "declaration": true,
     "target": "es2019",
-    "lib": [
-      "es2019"
-    ],
+    "lib": ["es2019"],
     "module": "commonjs",
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noUnusedLocals": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false
   }
 }
