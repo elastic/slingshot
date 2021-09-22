@@ -8,7 +8,7 @@ import {
   PLATFORMS,
   CLOUD_PROVIDERS,
   CLOUD_REGIONS,
-  NAMESPACES
+  NAMESPACES,
 } from '../constants';
 import { getTotalTransferFor } from '../lib/transfer_cache';
 
@@ -54,12 +54,12 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
       name: `pod-${i + (typeDef.offsetBy || 0)}`,
       hostname,
       ip: [faker.internet.ip()],
-      id: faker.random.uuid(),
+      id: faker.datatype.uuid(),
       platform: sample(typeDef.platforms || PLATFORMS) || '',
       provider: sample(typeDef.cloudProviders || CLOUD_PROVIDERS) || '',
       region: sample(typeDef.cloudRegions || CLOUD_REGIONS) || '',
       namespace: sample(NAMESPACES) || '',
-      createdAt: moment()
+      createdAt: moment(),
     };
   });
 
@@ -73,11 +73,11 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
       const pod = POD_CACHE[i];
       const rxValue = getMetric(now, 'rx', typeDef, {
         min: 0,
-        max: Number.MAX_SAFE_INTEGER
+        max: Number.MAX_SAFE_INTEGER,
       });
       const txValue = getMetric(now, 'tx', typeDef, {
         min: 0,
-        max: Number.MAX_SAFE_INTEGER
+        max: Number.MAX_SAFE_INTEGER,
       });
 
       return {
@@ -92,7 +92,7 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
         rxValue,
         txValue,
         rxTotal: getTotalTransferFor(`${pod.id}:rx`, rxValue),
-        txTotal: getTotalTransferFor(`${pod.id}:tx`, txValue)
+        txTotal: getTotalTransferFor(`${pod.id}:tx`, txValue),
       };
     },
     template: [
@@ -114,24 +114,16 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
         'host.name': '{{pod.hostname}}',
         'kubernetes.namespace': '{{pod.namespace}}',
         'kubernetes.node.name': `{{pod.hostname}}`,
-        'kubernetes.pod.cpu.usage.node.pct': ({ cpuPct }: CycleValues) =>
-          cpuPct * 0.5,
-        'kubernetes.pod.cpu.usage.limit.pct': ({ cpuPct }: CycleValues) =>
-          cpuPct,
+        'kubernetes.pod.cpu.usage.node.pct': ({ cpuPct }: CycleValues) => cpuPct * 0.5,
+        'kubernetes.pod.cpu.usage.limit.pct': ({ cpuPct }: CycleValues) => cpuPct,
         'kubernetes.pod.host_ip': '{{ip}}',
         'kubernetes.pod.ip': '{{ip}}',
-        'kubernetes.pod.memory.usage.node.pct': ({ memoryPct }: CycleValues) =>
-          memoryPct * 0.5,
-        'kubernetes.pod.memory.usage.limit.pct': ({ memoryPct }: CycleValues) =>
-          memoryPct,
-        'kubernetes.pod.network.in.bytes': ({ rxTotal }: CycleValues) =>
-          rxTotal,
-        'kubernetes.pod.network.in.errors': ({ rxTotal }: CycleValues) =>
-          rxTotal * 0.0002,
-        'kubernetes.pod.network.out.bytes': ({ txTotal }: CycleValues) =>
-          txTotal,
-        'kubernetes.pod.network.out.errors': ({ txTotal }: CycleValues) =>
-          txTotal * 0.0002,
+        'kubernetes.pod.memory.usage.node.pct': ({ memoryPct }: CycleValues) => memoryPct * 0.5,
+        'kubernetes.pod.memory.usage.limit.pct': ({ memoryPct }: CycleValues) => memoryPct,
+        'kubernetes.pod.network.in.bytes': ({ rxTotal }: CycleValues) => rxTotal,
+        'kubernetes.pod.network.in.errors': ({ rxTotal }: CycleValues) => rxTotal * 0.0002,
+        'kubernetes.pod.network.out.bytes': ({ txTotal }: CycleValues) => txTotal,
+        'kubernetes.pod.network.out.errors': ({ txTotal }: CycleValues) => txTotal * 0.0002,
         'kubernetes.pod.name': '{{pod.name}}',
         'kubernetes.pod.status.phase': 'running',
         'kubernetes.pod.status.ready': true,
@@ -140,8 +132,8 @@ export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
         'metricset.name': 'state_pod',
         'metricset.period': 10000,
         'service.address': `kube-state-metrics:8080_${FAKE_IDENTIFIER}`,
-        'service.type': 'slingshot-kubernetes'
-      }
-    ]
+        'service.type': 'slingshot-kubernetes',
+      },
+    ],
   };
 }
