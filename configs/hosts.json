@@ -20,7 +20,7 @@
       "addCloudData": true,
       "spike": [
         { "name": "memory", "mean": 1, "stdev": 0, "duration": "15m" },
-        { "name": "rx",  "mean": 10000000, "stdev": 100000, "duration": "5m" }
+        { "name": "rx", "mean": 10000000, "stdev": 100000, "duration": "5m" }
       ],
       "normal": [
         { "name": "memory", "mean": 0.6, "stdev": 0 },
@@ -32,5 +32,3 @@
     }
   }
 }
-
-

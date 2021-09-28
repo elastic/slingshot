@@ -20,7 +20,7 @@ export class Client {
   async purge(dataStream: string) {
     try {
       const response = await this.es.indices.deleteDataStream({
-        name: dataStream
+        name: dataStream,
       });
       return response;
     } catch (e) {
@@ -31,18 +31,12 @@ export class Client {
     }
   }
 
-  async batchIndex(
-    documents: any[],
-    { index, ...options }: ClientBatchIndexOptions
-  ) {
-    const body = flatMap(documents, doc => [
-      { create: { _index: index } },
-      doc
-    ]);
+  async batchIndex(documents: any[], { index, ...options }: ClientBatchIndexOptions) {
+    const body = flatMap(documents, doc => [{ create: { _index: index } }, doc]);
     return await this.es.bulk({
       refresh: true,
       ...options,
-      body
+      body,
     });
   }
 
@@ -50,7 +44,7 @@ export class Client {
     return await this.es.create({
       index,
       id: uuid.v4(),
-      body: document
+      body: document,
     });
   }
 }
