@@ -72,7 +72,7 @@ This example JSON will generate documents every 10 seconds, starting 1 day ago a
 
 This field configures the `hosts` and/or `pods` you would like to generate data for, and what values they should report.
 
-```json
+```json5
 "types": {
   "hosts": {
     // Optional
