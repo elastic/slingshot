@@ -1,10 +1,10 @@
 import { TypeInitializers } from '../types';
 import { initializeHosts } from './hosts';
 import { initializePods } from './pods';
-import { initializeClusters } from './clusters';
+import { initializeMonitoringEs } from './monitoring_es';
 
 export const docTypes: TypeInitializers = {
   hosts: initializeHosts,
   pods: initializePods,
-  clusters: initializeClusters,
+  monitoring_es: initializeMonitoringEs,
 };

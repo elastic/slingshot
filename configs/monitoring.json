@@ -10,18 +10,14 @@
     }
   },
   "timerange": {
-    "start": "now-1d/d",
-    "end": "now+1d/d",
+    "start": "now-1h",
+    "end": "now+1h",
     "interval": 10000
   },
   "types": {
-    "clusters": {
-      "total": 1,
+    "monitoring_es": {
+      "total": 3,
       "addCloudData": false,
-      "spike": [
-        { "name": "memory", "mean": 1, "stdev": 0, "duration": "15m" },
-        { "name": "rx", "mean": 10000000, "stdev": 100000, "duration": "5m" }
-      ],
       "normal": [
         { "name": "memory", "mean": 0.6, "stdev": 0 },
         { "name": "cpu", "mean": 0.4, "stdev": 0.1 },

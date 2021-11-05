@@ -12,7 +12,7 @@ export type Timerange = rt.TypeOf<typeof TimerangeRT>;
 export const DocTypesRT = rt.keyof({
   hosts: null,
   pods: null,
-  clusters: null,
+  monitoring_es: null,
 });
 export type DocTypes = rt.TypeOf<typeof DocTypesRT>;
 
@@ -67,7 +67,7 @@ export type TypeDef = rt.TypeOf<typeof TypeDefRT>;
 export const TypesRT = rt.partial({
   hosts: TypeDefRT,
   pods: TypeDefRT,
-  clusters: TypeDefRT,
+  monitoring_es: TypeDefRT,
 });
 export type Types = rt.TypeOf<typeof TypesRT>;
 
