@@ -1,8 +1,8 @@
 import { TypeInitializers } from '../types';
 import { initializeHosts } from './hosts';
-import { intializePods } from './pods';
+import { initializePods } from './pods';
 
 export const docTypes: TypeInitializers = {
   hosts: initializeHosts,
-  pods: intializePods
+  pods: initializePods,
 };
