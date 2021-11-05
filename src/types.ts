@@ -11,26 +11,27 @@ export type Timerange = rt.TypeOf<typeof TimerangeRT>;
 
 export const DocTypesRT = rt.keyof({
   hosts: null,
-  pods: null
+  pods: null,
+  clusters: null,
 });
 export type DocTypes = rt.TypeOf<typeof DocTypesRT>;
 
 export const DistributionDefRT = rt.type({
   name: rt.string,
   mean: rt.number,
-  stdev: rt.number
+  stdev: rt.number,
 });
 export type DistributionDef = rt.TypeOf<typeof DistributionDefRT>;
 
 export const SpikeDistributionDefRT = rt.intersection([
   rt.type({
-    ...DistributionDefRT.props
+    ...DistributionDefRT.props,
   }),
   rt.partial({
     duration: rt.string,
     hours: rt.array(rt.number),
-    minutes: rt.array(rt.number)
-  })
+    minutes: rt.array(rt.number),
+  }),
 ]);
 export type SpikeDistributionDef = rt.TypeOf<typeof SpikeDistributionDefRT>;
 
@@ -43,7 +44,7 @@ export type NormalDef = rt.TypeOf<typeof NormalDefRT>;
 export const TypeDefRT = rt.intersection([
   rt.type({
     total: rt.number,
-    addCloudData: rt.boolean
+    addCloudData: rt.boolean,
   }),
   rt.partial({
     offsetBy: rt.number,
@@ -55,17 +56,18 @@ export const TypeDefRT = rt.intersection([
     parent: rt.intersection([
       rt.type({
         total: rt.number,
-        type: DocTypesRT
+        type: DocTypesRT,
       }),
-      rt.partial({ offsetBy: rt.number })
-    ])
-  })
+      rt.partial({ offsetBy: rt.number }),
+    ]),
+  }),
 ]);
 export type TypeDef = rt.TypeOf<typeof TypeDefRT>;
 
 export const TypesRT = rt.partial({
   hosts: TypeDefRT,
-  pods: TypeDefRT
+  pods: TypeDefRT,
+  clusters: TypeDefRT,
 });
 export type Types = rt.TypeOf<typeof TypesRT>;
 
