@@ -5,3 +5,5 @@ config.json
 test*.js
 yarn.lock
 *.log
+
+.vscode
