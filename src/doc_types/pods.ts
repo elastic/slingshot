@@ -41,9 +41,9 @@ export interface CycleValues {
 
 const POD_CACHE: Record<string, PodDef> = {};
 
-export function intializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
+export function initializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
   // Create the pods so they are stable across calls
-  times(typeDef.total).forEach(i => {
+  times(typeDef.total).forEach((i) => {
     if (POD_CACHE[i]) {
       return POD_CACHE[i];
     }
