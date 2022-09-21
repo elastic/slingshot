@@ -27,7 +27,8 @@
         { "name": "cpu", "mean": 0.4, "stdev": 0.1 },
         { "name": "load", "mean": 1, "stdev": 0.1 },
         { "name": "rx", "mean": 1000, "stdev": 500 },
-        { "name": "tx", "mean": 1000, "stdev": 500 }
+        { "name": "tx", "mean": 1000, "stdev": 500 },
+        { "name": "diskIoTime", "mean": 10000000, "stdev": 100000 }
       ]
     },
     "pods": {
@@ -46,7 +47,8 @@
         { "name": "memory", "mean": 0.6, "stdev": 0 },
         { "name": "cpu", "mean": 0.4, "stdev": 0.1 },
         { "name": "rx", "mean": 1000, "stdev": 500 },
-        { "name": "tx", "mean": 1000, "stdev": 500 }
+        { "name": "tx", "mean": 1000, "stdev": 500 },
+        { "name": "diskIoTime", "mean": 10000000, "stdev": 100000 }
       ]
     }
   }

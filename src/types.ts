@@ -49,6 +49,7 @@ export const TypeDefRT = rt.intersection([
     offsetBy: rt.number,
     cloudProviders: rt.array(rt.string),
     platforms: rt.array(rt.string),
+    osTypes: rt.array(rt.string),
     cloudRegions: rt.array(rt.string),
     spike: SpikeDefRT,
     normal: NormalDefRT,

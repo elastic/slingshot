@@ -17,6 +17,13 @@ export const PLATFORMS = [
   'netbsd'
 ];
 
+export const OS_TYPES = [
+  'linux',
+  'macos',
+  'unix',
+  'windows'
+]
+
 export const CLOUD_PROVIDERS = [
   'aws',
   'gcp',
