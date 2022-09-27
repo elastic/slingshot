@@ -4,7 +4,7 @@ import moment, { Moment } from 'moment';
 import { randomInt, getMetric } from '../lib/value_helpers';
 import { SlingshotContext, TypeDef } from '../types';
 import { getTotalTransferFor } from '../lib/transfer_cache';
-import { FAKE_IDENTIFIER, PLATFORMS, CLOUD_PROVIDERS, CLOUD_REGIONS } from '../constants';
+import { FAKE_IDENTIFIER, PLATFORMS, CLOUD_PROVIDERS, CLOUD_REGIONS, OS_TYPES } from '../constants';
 
 const hostCache = new Map<number, HostDef>();
 
@@ -14,6 +14,7 @@ interface HostDef {
   ip: string[];
   mac: string[];
   platform: string;
+  osType: string;
   provider: string;
   region: string;
   totalMemory: number;
@@ -29,6 +30,7 @@ export interface CycleValues {
   cloudInstanceId: string;
   eventDuration: number;
   cpuPct: number;
+  diskIoTime: number;
   memoryPct: number;
   loadValue: number;
   rxValue: number;
@@ -49,6 +51,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
       id: faker.datatype.uuid(),
       mac: [faker.internet.mac()],
       platform: sample(typeDef.platforms || PLATFORMS) || '',
+      osType: sample(typeDef.osTypes || OS_TYPES) || '',
       totalMemory:
         sample(
           [
@@ -95,6 +98,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         min: 0,
         max: Number.MAX_SAFE_INTEGER,
       });
+       const diskIoTime = getMetric(now, 'diskIoTime', typeDef, {min: 0, max: Number.MAX_SAFE_INTEGER})
 
       return {
         date: now.toISOString(),
@@ -104,6 +108,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         cloudRegion: typeDef.addCloudData ? host.region : '',
         eventDuration: randomInt(80000000, 85000000), // TODO: is this the right range? does it matter?
         cpuPct,
+        diskIoTime,
         memoryPct,
         loadValue,
         rxValue,
@@ -123,6 +128,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.mac': ({ host }: CycleValues) => host.mac,
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
+        'host.os.type': ({ host }: CycleValues) => host.osType,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -162,6 +168,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.mac': ({ host }: CycleValues) => host.mac,
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
+        'host.os.type': ({ host }: CycleValues) => host.osType,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -205,6 +212,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.mac': ({ host }: CycleValues) => host.mac,
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
+        'host.os.type': ({ host }: CycleValues) => host.osType,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -227,6 +235,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'system.load.norm.1': ({ loadValue }: CycleValues) => loadValue,
         'system.load.norm.5': ({ loadValue }: CycleValues) => loadValue * 0.85,
         'system.load.norm.15': ({ loadValue }: CycleValues) => loadValue * 0.75,
+        'system.diskio.io.time': ({ diskIoTime }: CycleValues) => diskIoTime,
       },
       {
         '@timestamp': '{{date}}',
@@ -237,6 +246,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.mac': ({ host }: CycleValues) => host.mac,
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
+        'host.os.type': ({ host }: CycleValues) => host.osType,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -276,6 +286,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.mac': ({ host }: CycleValues) => host.mac,
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
+        'host.os.type': ({ host }: CycleValues) => host.osType,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -293,6 +304,34 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'metricset.period': metricsetPeriod,
         'service.type': 'slingshot-host',
         'system.uptime.duration.ms': ({ uptime }: CycleValues) => uptime,
+      },
+      {
+        '@timestamp': '{{date}}',
+        'host.name': ({ host }: CycleValues) => host.name,
+        'host.hostname': ({ host }: CycleValues) => host.name,
+        'host.ip': ({ host }: CycleValues) => host.ip,
+        'host.id': ({ host }: CycleValues) => host.id,
+        'host.mac': ({ host }: CycleValues) => host.mac,
+        'host.architecture': 'X86_64',
+        'host.os.platform': ({ host }: CycleValues) => host.platform,
+        'host.os.type': ({ host }: CycleValues) => host.osType,
+        'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
+        'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
+        'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
+        'agent.name': `{{host.name}}-agent-name_${FAKE_IDENTIFIER}`,
+        'agent.type': 'slingshot-metricbeat',
+        'agent.version': '7.9.3',
+        'ecs.version': '1.7.0',
+        'event.dataset': 'system.diskio',
+        'event.duration': '{{event_duration}}',
+        'event.module': 'system',
+        'cloud.instance.id': '{{cloud_instance_id}}',
+        'cloud.provider': '{{cloud_provider}}',
+        'cloud.region': '{{cloud_region}}',
+        'metricset.name': 'diskio',
+        'metricset.period': metricsetPeriod,
+        'service.type': 'slingshot-host',
+        'system.diskio.io.time': ({ diskIoTime }: CycleValues) => diskIoTime,
       },
     ],
   };
