@@ -5,32 +5,34 @@ import { Moment } from 'moment';
 export const TimerangeRT = rt.type({
   start: rt.string,
   end: rt.string,
-  interval: rt.number
+  interval: rt.number,
 });
 export type Timerange = rt.TypeOf<typeof TimerangeRT>;
 
 export const DocTypesRT = rt.keyof({
   hosts: null,
-  pods: null
+  pods: null,
+  containers: null,
+  services: null,
 });
 export type DocTypes = rt.TypeOf<typeof DocTypesRT>;
 
 export const DistributionDefRT = rt.type({
   name: rt.string,
   mean: rt.number,
-  stdev: rt.number
+  stdev: rt.number,
 });
 export type DistributionDef = rt.TypeOf<typeof DistributionDefRT>;
 
 export const SpikeDistributionDefRT = rt.intersection([
   rt.type({
-    ...DistributionDefRT.props
+    ...DistributionDefRT.props,
   }),
   rt.partial({
     duration: rt.string,
     hours: rt.array(rt.number),
-    minutes: rt.array(rt.number)
-  })
+    minutes: rt.array(rt.number),
+  }),
 ]);
 export type SpikeDistributionDef = rt.TypeOf<typeof SpikeDistributionDefRT>;
 
@@ -43,7 +45,7 @@ export type NormalDef = rt.TypeOf<typeof NormalDefRT>;
 export const TypeDefRT = rt.intersection([
   rt.type({
     total: rt.number,
-    addCloudData: rt.boolean
+    addCloudData: rt.boolean,
   }),
   rt.partial({
     offsetBy: rt.number,
@@ -53,34 +55,37 @@ export const TypeDefRT = rt.intersection([
     cloudRegions: rt.array(rt.string),
     spike: SpikeDefRT,
     normal: NormalDefRT,
+    environment: rt.number,
     parent: rt.intersection([
       rt.type({
         total: rt.number,
-        type: DocTypesRT
+        type: DocTypesRT,
       }),
-      rt.partial({ offsetBy: rt.number })
-    ])
-  })
+      rt.partial({ offsetBy: rt.number }),
+    ]),
+  }),
 ]);
 export type TypeDef = rt.TypeOf<typeof TypeDefRT>;
 
 export const TypesRT = rt.partial({
   hosts: TypeDefRT,
-  pods: TypeDefRT
+  pods: TypeDefRT,
+  containers: TypeDefRT,
+  services: TypeDefRT,
 });
 export type Types = rt.TypeOf<typeof TypesRT>;
 
 export const ConfigurationRT = rt.intersection([
   rt.type({
     elasticsearch: rt.unknown,
-    timerange: TimerangeRT
+    timerange: TimerangeRT,
   }),
   rt.partial({
     types: TypesRT,
     dryRun: rt.boolean,
     purge: rt.boolean,
-    logLevel: rt.string
-  })
+    logLevel: rt.string,
+  }),
 ]);
 
 export type Configuration = rt.TypeOf<typeof ConfigurationRT>;
@@ -99,9 +104,6 @@ export interface TypeGenerator {
   createCycleValues: (index: number, time: Moment) => any;
 }
 
-export type TypeIntializationFn = (
-  typeDef: TypeDef,
-  ctx: SlingshotContext
-) => TypeGenerator;
+export type TypeIntializationFn = (typeDef: TypeDef, ctx: SlingshotContext) => TypeGenerator;
 
 export type TypeInitializers = Record<DocTypes, TypeIntializationFn>;

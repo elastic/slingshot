@@ -1,0 +1,44 @@
+{
+  "elasticsearch": {
+    "node": "http://localhost:9200",
+    "auth": {
+      "username": "elastic",
+      "password": "changeme"
+    },
+    "ssl": {
+      "rejectUnauthorized": false
+    }
+  },
+  "timerange": {
+    "start": "now-10m",
+    "end": "now",
+    "interval": 5000
+  },
+  "types": {
+    "hosts": {
+      "total": 5000,
+      "addCloudData": true,
+      "spike": [],
+      "normal": []
+    },
+    "pods": {
+      "total": 5000,
+      "addCloudData": true,
+      "spike": [],
+      "normal": []
+    },
+    "containers": {
+      "total": 5000,
+      "addCloudData": true,
+      "spike": [],
+      "normal": []
+    },
+    "services": {
+      "total": 2500,
+      "environments": 2,
+      "addCloudData": true,
+      "spike": [],
+      "normal": []
+    }
+  }
+}
