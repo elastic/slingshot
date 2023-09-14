@@ -4,7 +4,7 @@ import moment, { Moment } from 'moment';
 import { randomInt, getMetric } from '../lib/value_helpers';
 import { SlingshotContext, TypeDef } from '../types';
 import { getTotalTransferFor } from '../lib/transfer_cache';
-import { FAKE_IDENTIFIER, PLATFORMS, CLOUD_PROVIDERS, CLOUD_REGIONS, OS_TYPES } from '../constants';
+import { FAKE_IDENTIFIER, PLATFORMS, CLOUD_PROVIDERS, CLOUD_REGIONS, OS_TYPES, OS_NAMES } from '../constants';
 
 const hostCache = new Map<number, HostDef>();
 
@@ -15,6 +15,7 @@ interface HostDef {
   mac: string[];
   platform: string;
   osType: string;
+  osName: string;
   provider: string;
   region: string;
   totalMemory: number;
@@ -52,6 +53,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
       mac: [faker.internet.mac()],
       platform: sample(typeDef.platforms || PLATFORMS) || '',
       osType: sample(typeDef.osTypes || OS_TYPES) || '',
+      osName: sample(typeDef.osNames || OS_NAMES) || '',
       totalMemory:
         sample(
           [
@@ -129,6 +131,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
         'host.os.type': ({ host }: CycleValues) => host.osType,
+        'host.os.name': ({ host }: CycleValues) => host.osName,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -169,6 +172,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
         'host.os.type': ({ host }: CycleValues) => host.osType,
+        'host.os.name': ({ host }: CycleValues) => host.osName,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
@@ -247,6 +251,7 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.architecture': 'X86_64',
         'host.os.platform': ({ host }: CycleValues) => host.platform,
         'host.os.type': ({ host }: CycleValues) => host.osType,
+        'host.os.name': ({ host }: CycleValues) => host.osType,
         'agent.ephemeral_id': `{{host.name}}-ephemeral-uuid_${FAKE_IDENTIFIER}`,
         'agent.hostname': `{{host.name}}-agent-hostname_${FAKE_IDENTIFIER}`,
         'agent.id': `{{host.name}}-agent-uuid_${FAKE_IDENTIFIER}`,
