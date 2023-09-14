@@ -50,6 +50,7 @@ export const TypeDefRT = rt.intersection([
     cloudProviders: rt.array(rt.string),
     platforms: rt.array(rt.string),
     osTypes: rt.array(rt.string),
+    osNames: rt.array(rt.string),
     cloudRegions: rt.array(rt.string),
     spike: SpikeDefRT,
     normal: NormalDefRT,

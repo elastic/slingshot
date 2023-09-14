@@ -24,6 +24,12 @@ export const OS_TYPES = [
   'windows'
 ]
 
+export const OS_NAMES = [
+  'Ubuntu',
+  'iOS',
+  'Windows'
+]
+
 export const CLOUD_PROVIDERS = [
   'aws',
   'gcp',
