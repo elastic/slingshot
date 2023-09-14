@@ -42,7 +42,7 @@ export interface CycleValues {
 }
 
 export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) {
-  times(typeDef.total).forEach(i => {
+  times(typeDef.total).forEach((i) => {
     if (hostCache.has(i)) {
       return hostCache.get(i);
     }
@@ -55,15 +55,13 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
       osType: sample(typeDef.osTypes || OS_TYPES) || '',
       osName: sample(typeDef.osNames || OS_NAMES) || '',
       totalMemory:
-        sample(
-          [
-            Math.pow(1024, 2) * 4,
-            Math.pow(1024, 2) * 8,
-            Math.pow(1024, 2) * 16,
-            Math.pow(1024, 2) * 32,
-            Math.pow(1024, 2) * 64,
-          ]
-        ) || Math.pow(1024, 2) * 4,
+        sample([
+          Math.pow(1024, 2) * 4,
+          Math.pow(1024, 2) * 8,
+          Math.pow(1024, 2) * 16,
+          Math.pow(1024, 2) * 32,
+          Math.pow(1024, 2) * 64,
+        ]) || Math.pow(1024, 2) * 4,
       provider: sample(typeDef.cloudProviders || CLOUD_PROVIDERS) || '',
       region: sample(typeDef.cloudRegions || CLOUD_REGIONS) || '',
       cores: randomInt(1, 8),
@@ -100,7 +98,10 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         min: 0,
         max: Number.MAX_SAFE_INTEGER,
       });
-       const diskIoTime = getMetric(now, 'diskIoTime', typeDef, {min: 0, max: Number.MAX_SAFE_INTEGER})
+      const diskIoTime = getMetric(now, 'diskIoTime', typeDef, {
+        min: 0,
+        max: Number.MAX_SAFE_INTEGER,
+      });
 
       return {
         date: now.toISOString(),
@@ -122,7 +123,9 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
     },
     template: [
       {
+        _index: 'metrics-system.cpu-slingshot',
         '@timestamp': '{{date}}',
+        'data_stream.dataset': 'system.cpu',
         'host.name': ({ host }: CycleValues) => host.name,
         'host.hostname': ({ host }: CycleValues) => host.name,
         'host.ip': ({ host }: CycleValues) => host.ip,
@@ -163,7 +166,9 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'system.cpu.user.pct': ({ cpuPct, loadValue }: CycleValues) => cpuPct * 0.8 * loadValue,
       },
       {
+        _index: 'metrics-system.memory-slingshot',
         '@timestamp': '{{date}}',
+        'data_stream.dataset': 'system.memory',
         'host.name': ({ host }: CycleValues) => host.name,
         'host.hostname': ({ host }: CycleValues) => host.name,
         'host.ip': ({ host }: CycleValues) => host.ip,
@@ -208,7 +213,9 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'system.memory.used.pct': ({ memoryPct }: CycleValues) => memoryPct,
       },
       {
+        _index: 'metrics-system.load-slingshot',
         '@timestamp': '{{date}}',
+        'data_stream.dataset': 'system.load',
         'host.name': ({ host }: CycleValues) => host.name,
         'host.hostname': ({ host }: CycleValues) => host.name,
         'host.ip': ({ host }: CycleValues) => host.ip,
@@ -242,7 +249,9 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'system.diskio.io.time': ({ diskIoTime }: CycleValues) => diskIoTime,
       },
       {
+        _index: 'metrics-system.network-slingshot',
         '@timestamp': '{{date}}',
+        'data_stream.dataset': 'system.network',
         'host.name': ({ host }: CycleValues) => host.name,
         'host.hostname': ({ host }: CycleValues) => host.name,
         'host.ip': ({ host }: CycleValues) => host.ip,
@@ -283,7 +292,9 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'host.network.out.bytes': ({ txValue }: CycleValues) => txValue,
       },
       {
+        _index: 'metrics-system.uptime-slingshot',
         '@timestamp': '{{date}}',
+        'data_stream.dataset': 'system.uptime',
         'host.name': ({ host }: CycleValues) => host.name,
         'host.hostname': ({ host }: CycleValues) => host.name,
         'host.ip': ({ host }: CycleValues) => host.ip,
@@ -311,7 +322,9 @@ export function initializeHosts(typeDef: TypeDef, { logger }: SlingshotContext) 
         'system.uptime.duration.ms': ({ uptime }: CycleValues) => uptime,
       },
       {
+        _index: 'metrics-system.diskio-slingshot',
         '@timestamp': '{{date}}',
+        'data_stream.dataset': 'system.diskio',
         'host.name': ({ host }: CycleValues) => host.name,
         'host.hostname': ({ host }: CycleValues) => host.name,
         'host.ip': ({ host }: CycleValues) => host.ip,

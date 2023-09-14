@@ -42,8 +42,8 @@
     "yargs": "^16.1.0"
   },
   "devDependencies": {
-    "@elastic/eslint-config-kibana": "link:../kibana/packages/elastic-eslint-config-kibana",
-    "@kbn/eslint-plugin-eslint": "link:../kibana/packages/kbn-eslint-plugin-eslint",
+    "@elastic/eslint-config-kibana": "file:../kibana/packages/elastic-eslint-config-kibana",
+    "@kbn/eslint-plugin-eslint": "file:../kibana/packages/kbn-eslint-plugin-eslint",
     "babel-eslint": "^8.0.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.15.0",

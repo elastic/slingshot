@@ -128,7 +128,7 @@ export function initializePods(typeDef: TypeDef, { logger }: SlingshotContext) {
         'kubernetes.pod.status.phase': 'running',
         'kubernetes.pod.status.ready': true,
         'kubernetes.pod.status.scheduled': true,
-        'kubernetes.pod.uid': `{{pod.id}}`,
+        'kubernetes.pod.uid': '{{pod.name}}',
         'metricset.name': 'state_pod',
         'metricset.period': 10000,
         'service.address': `kube-state-metrics:8080_${FAKE_IDENTIFIER}`,
